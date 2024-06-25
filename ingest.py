@@ -14,3 +14,13 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
     raise ValueError("Google API Key not provided. Please provide GOOGLE_API_KEY as an environment variable")
+
+# Function for Loading Documents using PyPDFDirectoryLoader
+def load_docs(file_path):
+    loader = PyPDFDirectoryLoader(file_path)
+    # Loading Documents with a Progress Bar
+    docs = []
+    for doc in tqdm(loader.load(), desc="Loading documents", unit="doc"):
+        docs.append(doc)
+    return docs
+documents = load_docs(file_path="data")
