@@ -35,3 +35,14 @@ def extract_and_split_docs(documents) -> List[str]:
     text = " ".join([doc.page_content for doc in documents])
     return split_text(text)
 chunked_text = extract_and_split_docs(documents=documents)
+
+# Defined the GeminiEmbeddingFunction class based on the updated Chroma interface
+class GeminiEmbeddingFunction(EmbeddingFunction):
+    def __call__(self, input: Documents) -> Embeddings:
+        gemini_api_key = api_key
+        if not gemini_api_key:
+            raise ValueError("Google API Key not provided. Please provide GOOGLE_API_KEY as an environment variable")
+        genai.configure(api_key=gemini_api_key)
+        model = "models/embedding-001"
+        title = "Custom query"
+        return genai.embed_content(model=model, content=input, task_type="retrieval_document", title=title)["embedding"]
