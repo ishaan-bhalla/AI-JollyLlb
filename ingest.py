@@ -66,3 +66,7 @@ def load_chroma_collection(path, name):
     db = chroma_client.get_collection(name=name, embedding_function=GeminiEmbeddingFunction())
     return db
 db = load_chroma_collection(path="vectorstore", name="rag_ex")
+
+# Verifying the number of embeddings created in the vector store
+num_embeddings = db.count()
+print(f"Number of embeddings in the vectorstore: {num_embeddings}")
