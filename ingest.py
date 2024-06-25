@@ -8,3 +8,9 @@ import chromadb  # Chromadb for handling the ChromaDB database
 from chromadb import Documents, EmbeddingFunction, Embeddings  # Classes for handling documents and embeddings in ChromaDB
 import google.generativeai as genai  # Google generative AI package for embedding functions
 
+# Load environment variables from a .env file
+load_dotenv()
+
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError("Google API Key not provided. Please provide GOOGLE_API_KEY as an environment variable")
