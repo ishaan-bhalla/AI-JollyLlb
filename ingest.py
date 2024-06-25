@@ -29,3 +29,9 @@ documents = load_docs(file_path="data")
 def split_text(text: str) -> List[str]:
     split_text = re.split('\n \n', text)
     return [i for i in split_text if i != ""]
+
+# Function for converting data into single string
+def extract_and_split_docs(documents) -> List[str]:
+    text = " ".join([doc.page_content for doc in documents])
+    return split_text(text)
+chunked_text = extract_and_split_docs(documents=documents)
