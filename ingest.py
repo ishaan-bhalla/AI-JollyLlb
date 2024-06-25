@@ -59,3 +59,10 @@ def create_chroma_db(documents: List, path: str, name: str):
             db.add(documents=d, ids=str(i))
     return db, name
 db, name = create_chroma_db(documents=chunked_text, path="vectorstore", name="rag_ex")    
+
+# Function to load an existing ChromaDB collection
+def load_chroma_collection(path, name):
+    chroma_client = chromadb.PersistentClient(path=path)
+    db = chroma_client.get_collection(name=name, embedding_function=GeminiEmbeddingFunction())
+    return db
+db = load_chroma_collection(path="vectorstore", name="rag_ex")
