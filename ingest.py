@@ -24,3 +24,8 @@ def load_docs(file_path):
         docs.append(doc)
     return docs
 documents = load_docs(file_path="data")
+
+# Function for splitting data into chunks
+def split_text(text: str) -> List[str]:
+    split_text = re.split('\n \n', text)
+    return [i for i in split_text if i != ""]
