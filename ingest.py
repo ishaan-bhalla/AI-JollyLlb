@@ -46,3 +46,16 @@ class GeminiEmbeddingFunction(EmbeddingFunction):
         model = "models/embedding-001"
         title = "Custom query"
         return genai.embed_content(model=model, content=input, task_type="retrieval_document", title=title)["embedding"]
+
+# Function to create or load ChromaDB collection
+def create_chroma_db(documents: List, path: str, name: str):
+    chroma_client = chromadb.PersistentClient(path=path)
+    collections = chroma_client.list_collections()
+    if name in [collection.name for collection in collections]:
+        db = chroma_client.get_collection(name=name, embedding_function=GeminiEmbeddingFunction())
+    else:
+        db = chroma_client.create_collection(name=name, embedding_function=GeminiEmbeddingFunction())
+        for i, d in enumerate(documents):
+            db.add(documents=d, ids=str(i))
+    return db, name
+db, name = create_chroma_db(documents=chunked_text, path="vectorstore", name="rag_ex")    
