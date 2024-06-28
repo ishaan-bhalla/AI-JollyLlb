@@ -49,3 +49,12 @@ def generate_ans(prompt):
     model = genai.GenerativeModel('gemini-pro')
     answer = model.generate_content(prompt)
     return answer.text
+
+# Function to generate an answer based on a query by retrieving relevant text, creating a prompt, and using the generative AI model
+def generate_answer(db, query):
+    relevant_text = get_relevant_passage(query, db, n_results=3)
+    if not relevant_text:
+        return "No relevant text found for the query."
+    prompt = make_rag_prompt(query, relevant_passage="".join(relevant_text))
+    answer = generate_ans(prompt)
+    return answer
