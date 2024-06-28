@@ -58,3 +58,14 @@ def generate_answer(db, query):
     prompt = make_rag_prompt(query, relevant_passage="".join(relevant_text))
     answer = generate_ans(prompt)
     return answer
+
+if __name__ == "__main__":
+    
+    documents = load_docs(file_path="data")
+    chunked_text = extract_and_split_docs(documents=documents)
+    db, name = create_chroma_db(documents=chunked_text, path="vectorstore", name="rag_ex")
+
+    # Initialised db to load the exsisting vector collection
+    vectordb = load_chroma_collection(path="vectorstore", name="rag_ex")
+    answer = generate_answer(db, query="Introduce Yourself")
+    print(answer)
