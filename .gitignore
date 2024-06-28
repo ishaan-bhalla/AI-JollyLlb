@@ -1,3 +1,4 @@
 .env
 vectorstore
 __pycache__
+.DS_Store
