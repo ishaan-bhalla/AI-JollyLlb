@@ -38,3 +38,14 @@ def make_rag_prompt(query, relevant_passage):
     """).format(query=query, relevant_passage=escaped)
 
     return prompt
+
+
+# Function to generate an answer using the Gemini generative AI model based on the provided prompt
+def generate_ans(prompt):
+    gemini_api_key = os.getenv("GOOGLE_API_KEY")
+    if not gemini_api_key:
+        raise ValueError("Google API Key not provided. Please provide GOOGLE_API_KEY as an environment variable")
+    genai.configure(api_key=gemini_api_key)
+    model = genai.GenerativeModel('gemini-pro')
+    answer = model.generate_content(prompt)
+    return answer.text
