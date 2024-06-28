@@ -23,7 +23,6 @@ def load_docs(file_path):
     for doc in tqdm(loader.load(), desc="Loading documents", unit="doc"):
         docs.append(doc)
     return docs
-documents = load_docs(file_path="data")
 
 # Function for splitting data into chunks
 def split_text(text: str) -> List[str]:
@@ -34,7 +33,6 @@ def split_text(text: str) -> List[str]:
 def extract_and_split_docs(documents) -> List[str]:
     text = " ".join([doc.page_content for doc in documents])
     return split_text(text)
-chunked_text = extract_and_split_docs(documents=documents)
 
 # Defined the GeminiEmbeddingFunction class based on the updated Chroma interface
 class GeminiEmbeddingFunction(EmbeddingFunction):
@@ -58,15 +56,21 @@ def create_chroma_db(documents: List, path: str, name: str):
         for i, d in enumerate(documents):
             db.add(documents=d, ids=str(i))
     return db, name
-db, name = create_chroma_db(documents=chunked_text, path="vectorstore", name="rag_ex")    
-
+    
 # Function to load an existing ChromaDB collection
 def load_chroma_collection(path, name):
     chroma_client = chromadb.PersistentClient(path=path)
     db = chroma_client.get_collection(name=name, embedding_function=GeminiEmbeddingFunction())
     return db
-db = load_chroma_collection(path="vectorstore", name="rag_ex")
 
-# Verifying the number of embeddings created in the vector store
-num_embeddings = db.count()
-print(f"Number of embeddings in the vectorstore: {num_embeddings}")
+if __name__ == "__main__":
+    
+    documents = load_docs(file_path="data")
+    chunked_text = extract_and_split_docs(documents=documents)
+    db, name = create_chroma_db(documents=chunked_text, path="vectorstore", name="rag_ex")
+    db = load_chroma_collection(path="vectorstore", name="rag_ex")
+    
+    # Verifying the number of embeddings created in the vector store
+    num_embeddings = db.count()
+    print(f"Number of embeddings in the vectorstore: {num_embeddings}")
+    
